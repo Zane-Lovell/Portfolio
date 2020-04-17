@@ -1,0 +1,27 @@
+### Forecasting model created by Dr. Jose Luis Guerrero Cusumano
+### This model was originally created to forecast COVID 19 cases in Italy
+### This model has been formed to NY State the week of March 30
+### The data has not been updated since March 31 of 2020
+
+library(readxl)
+NYCOVIDForecast <- read_excel("NYCOVIDForecast.xlsx", 
++     col_types = c("date", "numeric", "numeric", 
++         "numeric", "numeric", "numeric"))
+plot(NYCOVIDForecast$lncumm, NYCOVIDForecast$`Numeric Pattern`)
+### from this plot we can see that the natural log of cumulative COVID19 cases are beginning to level
+
+### we can now fit the natural log to the following equation
+### y = a + bx + cx^2
+forecastedcases <- -0.296244 + 0.604374*NYCOVIDForecast$`Numeric Pattern_1` - 0.0073519*NYCOVIDForecast$`Numeric Pattern_1` ** 2
+
+plot(NYCOVIDForecast$`Numeric Pattern_1`, forecastedcases)
+###this plot shows us the fitted values from our equation which form a smooth parabola. 
+### now we must convert back to real number of cases by the following function:
+### e^x 
+number_e <- 2.71828
+
+realforecast <- number_e ** forecastedcases
+plot(NYCOVIDForecast$`Numeric Pattern_1`, realforecast)
+
+###the result of the analysis tells us that NY State should experience the greatest number of daily increases
+###around April 12 and should experience some relief from the virus around late may.
